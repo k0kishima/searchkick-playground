@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./containers/app/Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - gem-cache:/usr/local/bundle
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    command: bash -c "rm -f tmp/pids/server.pid && rails s -b 0.0.0.0"
+    networks:
+      - searchkick-playground-network
+  db:
+    image: mysql:8.3
+    platform: linux/x86_64
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      - "3306:3306"
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./tmp/mysql/data:/var/lib/mysql
+    networks:
+      - searchkick-playground-network
+volumes:
+  gem-cache: {}
+
+networks:
+  searchkick-playground-network:
+    driver: bridge
