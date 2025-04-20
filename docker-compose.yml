@@ -12,6 +12,8 @@ services:
     stdin_open: true
     tty: true
     command: bash -c "rm -f tmp/pids/server.pid && rails s -b 0.0.0.0"
+    environment:
+      OPENSEARCH_URL: "http://opensearch:9200"
     networks:
       - searchkick-playground-network
   db:
@@ -27,8 +29,29 @@ services:
       - ./tmp/mysql/data:/var/lib/mysql
     networks:
       - searchkick-playground-network
+  opensearch:
+    build:
+      context: .
+      dockerfile: ./containers/opensearch/Dockerfile.dev
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - DISABLE_SECURITY_PLUGIN=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - searchkick-playground-network
+
 volumes:
   gem-cache: {}
+  opensearch_data:
+    driver: local
 
 networks:
   searchkick-playground-network:
