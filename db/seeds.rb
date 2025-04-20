@@ -1,9 +1,23 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+Company.create!(
+  name: "帝国金融",
+  description: "大阪府に本社を置く、貸金業を営む企業。主に中小企業向けの融資を行っている。",
+  company_synonyms_attributes: [
+    { name: "バンク・オブ・エンペラー" },
+  ]
+)
+
+Company.create!(
+  name: "雑巾自動車",
+  description: "中古車販売を行う企業。特にスポーツカーに強みを持つ。",
+  company_synonyms_attributes: [
+    { name: "Zokin Motors" },
+  ]
+)
+
+Company.create!(
+  name: "ニシキヘビファイナンス",
+  description: "支店を大量に出しているため勢いがありそうに見える貸金業者。",
+  company_synonyms_attributes: [
+    { name: "Python Finance" },
+  ]
+)
