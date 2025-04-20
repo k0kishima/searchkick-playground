@@ -47,3 +47,7 @@ group :development, :test do
 end
 
 
+
+gem "searchkick", "~> 5.5"
+
+gem "opensearch-ruby", "~> 3.4"
