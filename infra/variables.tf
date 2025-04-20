@@ -1,0 +1,53 @@
+variable "project_name" {
+  type    = string
+  default = "searchkick-playground"
+}
+
+variable "aws_region" {
+  type    = string
+  default = "ap-northeast-1"
+}
+
+variable "db_username" {
+  type    = string
+  default = "app"
+}
+
+variable "db_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "db_name" {
+  type    = string
+  default = "searchkick_playground"
+}
+
+variable "availability_zones" {
+  type    = list(string)
+  default = ["ap-northeast-1a", "ap-northeast-1c"]
+}
+
+variable "opensearch_cluster_instance_type" {
+  type        = string
+  description = "The OpenSearch cluster instance type"
+  default     = "t3.small.search"
+}
+
+variable "opensearch_cluster_instance_count" {
+  type        = number
+  description = "The number of instances of OpenSearch cluster"
+  default     = 1
+}
+
+variable "opensearch_ebs_volume_size" {
+  type        = number
+  description = "The size (in GB) of the OpenSearch EBS volume"
+  default     = 10
+}
+
+variable "opensearch_master_user_password" {
+  description = "Password for OpenSearch master user"
+  type        = string
+  sensitive   = true
+}
