@@ -51,3 +51,23 @@ variable "opensearch_master_user_password" {
   type        = string
   sensitive   = true
 }
+
+variable "github_repository" {
+  type        = string
+  description = "The GitHub repository in the format 'owner/repo', e.g., 'k0kishima/searchkick-playground'"
+}
+
+variable "backend_ecs_service_initial_desired_count" {
+  type    = number
+  default = 1
+}
+
+variable "backend_ecs_task_cpu" {
+  type    = number
+  default = 512
+}
+
+variable "backend_ecs_task_memory" {
+  type    = number
+  default = 1024
+}

@@ -1,5 +1,5 @@
-resource "aws_lb" "this" {
-  name               = "${var.project_name}-alb"
+resource "aws_lb" "app" {
+  name               = "${var.project_name}-alb-app"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -7,7 +7,7 @@ resource "aws_lb" "this" {
 }
 
 resource "aws_lb_listener" "app" {
-  load_balancer_arn = aws_lb.this.arn
+  load_balancer_arn = aws_lb.app.arn
   port              = 80
   protocol          = "HTTP"
 
@@ -37,7 +37,7 @@ resource "aws_lb_listener_rule" "app" {
 }
 
 resource "aws_lb_target_group" "app" {
-  name        = "${var.project_name}-tg"
+  name        = "${var.project_name}-alb-tg"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"

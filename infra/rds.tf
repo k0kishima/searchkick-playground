@@ -40,3 +40,34 @@ resource "aws_db_instance" "this" {
   publicly_accessible    = false
   multi_az               = false
 }
+
+# TODO: 別ファイルに分ける
+resource "aws_ssm_parameter" "db_name" {
+  name  = "/${var.project_name}/database/name"
+  type  = "String"
+  value = var.db_name
+}
+
+resource "aws_ssm_parameter" "db_username" {
+  name  = "/${var.project_name}/database/username"
+  type  = "String"
+  value = var.db_username
+}
+
+resource "aws_ssm_parameter" "db_password" {
+  name  = "/${var.project_name}/database/password"
+  type  = "SecureString"
+  value = var.db_password
+}
+
+resource "aws_ssm_parameter" "db_host" {
+  name  = "/${var.project_name}/database/host"
+  type  = "String"
+  value = aws_db_instance.this.address
+}
+
+resource "aws_ssm_parameter" "db_port" {
+  name  = "/${var.project_name}/database/port"
+  type  = "String"
+  value = aws_db_instance.this.port
+}

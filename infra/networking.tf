@@ -107,12 +107,14 @@ resource "aws_security_group" "alb" {
 resource "aws_security_group" "app_alb_target" {
   name   = "${var.project_name}-alb-target-sg"
   vpc_id = aws_vpc.this.id
+
   ingress {
     protocol        = -1
     from_port       = 0
     to_port         = 0
     security_groups = [aws_security_group.alb.id]
   }
+
   egress {
     from_port   = 0
     to_port     = 0

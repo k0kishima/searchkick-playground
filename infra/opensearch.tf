@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 resource "aws_opensearch_domain" "this" {
   domain_name    = "${var.project_name}-search"
   engine_version = "OpenSearch_2.11"
@@ -48,7 +46,7 @@ resource "aws_opensearch_domain" "this" {
       {
         Effect = "Allow",
         Principal = {
-          AWS = aws_iam_role.ecs_task_role.arn
+          AWS = aws_iam_role.backend_task.arn
         },
         Action = [
           "es:ESHttpGet",
