@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "backend_task_policy" {
 resource "aws_ecs_task_definition" "backend" {
   container_definitions = jsonencode([
     {
-      name      = "web"
+      name      = "backend-proxy"
       image     = "nginx"
       essential = true
       portMappings = [
@@ -84,9 +84,17 @@ resource "aws_ecs_service" "backend" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.app.arn
-    container_name   = "web"
+    container_name   = "backend-proxy"
     container_port   = 80
   }
 
   depends_on = [aws_lb_listener.app]
+}
+
+resource "aws_cloudwatch_log_group" "app" {
+  name = "/ecs/${var.project_name}/app"
+}
+
+resource "aws_cloudwatch_log_group" "proxy" {
+  name = "/ecs/${var.project_name}/proxy"
 }

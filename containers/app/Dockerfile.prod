@@ -1,0 +1,29 @@
+FROM ruby:3.4-slim
+
+RUN mkdir -p /app
+WORKDIR /app
+
+ENV LANG=C.UTF-8 \
+    RAILS_ENV=production \
+    BUNDLER_VERSION=2.6.7 \
+    BUNDLE_DEPLOYMENT=true \
+    BUNDLE_PATH=/bundle
+
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      libyaml-dev \
+      default-libmysqlclient-dev \
+      ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+
+COPY Gemfile Gemfile.lock ./
+RUN gem install bundler -v $BUNDLER_VERSION && \
+    bundle _${BUNDLER_VERSION}_ install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]

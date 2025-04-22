@@ -26,11 +26,6 @@ resource "aws_opensearch_domain" "this" {
     enforce_https = true
   }
 
-  vpc_options {
-    subnet_ids         = [aws_subnet.private[0].id]
-    security_group_ids = [aws_security_group.opensearch.id]
-  }
-
   advanced_security_options {
     enabled                        = true
     internal_user_database_enabled = true
