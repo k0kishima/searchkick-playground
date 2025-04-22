@@ -90,3 +90,11 @@ resource "aws_ecs_service" "backend" {
 
   depends_on = [aws_lb_listener.app]
 }
+
+resource "aws_cloudwatch_log_group" "app" {
+  name = "/ecs/${var.project_name}/app"
+}
+
+resource "aws_cloudwatch_log_group" "proxy" {
+  name = "/ecs/${var.project_name}/proxy"
+}

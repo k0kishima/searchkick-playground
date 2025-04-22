@@ -1,0 +1,71 @@
+name: Deploy Rails App to ECS
+
+on:
+  workflow_dispatch: null
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-northeast-1
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  PROJECT: searchkick-playground
+  OPENSEARCH_URL: ${{ secrets.OPENSEARCH_URL }}
+  DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
+  DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+  DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+
+jobs:
+  build-and-push-image-proxy:
+    uses: ./.github/workflows/build-and-push-image-proxy.yml
+    with:
+      aws-region: ap-northeast-1
+      project: searchkick-playground
+    secrets:
+      aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
+  build-and-push-image-app:
+    uses: ./.github/workflows/build-and-push-image-app.yml
+    with:
+      aws-region: ap-northeast-1
+      project: searchkick-playground
+    secrets:
+      aws-account-id: ${{ secrets.AWS_ACCOUNT_ID }}
+  deploy-to-ecs:
+    needs: [build-and-push-image-proxy, build-and-push-image-app]
+    runs-on: ubuntu-latest
+    env:
+      PROXY_IMAGE_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/searchkick-playground-ecr-repo-nginx:latest
+      APP_IMAGE_URI:   ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/searchkick-playground-ecr-repo-app:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/searchkick-playground-github-actions-role
+          aws-region: ap-northeast-1
+
+      - name: Generate task definition
+        run: |
+          envsubst < containers/taskdef-template.json > taskdef.json
+
+      - name: Register ECS task definition
+        id: register-task-def
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --family ${{ env.PROJECT }}-backend \
+            --execution-role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.PROJECT }}-backend-task-execution-role \
+            --task-role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.PROJECT }}-backend-task-role \
+            --cli-input-json file://taskdef.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
+
+      - name: Update ECS service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ env.PROJECT }}-ecs-cluster-backend \
+            --service ${{ env.PROJECT }}-ecs-service-backend \
+            --task-definition $TASK_DEF_ARN
