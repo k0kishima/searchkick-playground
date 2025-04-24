@@ -11,6 +11,7 @@ env:
   AWS_REGION: ap-northeast-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   PROJECT: searchkick-playground
+  SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
   OPENSEARCH_URL: ${{ secrets.OPENSEARCH_URL }}
   DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
   DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
@@ -56,7 +57,7 @@ jobs:
         run: |
           TASK_DEF_ARN=$(aws ecs register-task-definition \
             --family ${{ env.PROJECT }}-backend \
-            --execution-role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.PROJECT }}-backend-task-execution-role \
+            --execution-role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.PROJECT }}-backend-task-exec-role \
             --task-role-arn arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.PROJECT }}-backend-task-role \
             --cli-input-json file://taskdef.json \
             --query 'taskDefinition.taskDefinitionArn' \
@@ -68,4 +69,5 @@ jobs:
           aws ecs update-service \
             --cluster ${{ env.PROJECT }}-ecs-cluster-backend \
             --service ${{ env.PROJECT }}-ecs-service-backend \
-            --task-definition $TASK_DEF_ARN
+            --task-definition $TASK_DEF_ARN \
+            --force-new-deployment

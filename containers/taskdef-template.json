@@ -16,6 +16,18 @@
           "protocol": "tcp"
         }
       ],
+      "mountPoints": [
+        {
+          "sourceVolume": "app-public",
+          "containerPath": "/app/public",
+          "readOnly": true
+        },
+        {
+          "sourceVolume": "app-tmp",
+          "containerPath": "/app/tmp",
+          "readOnly": true
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -29,6 +41,18 @@
       "name": "backend-app",
       "image": "${APP_IMAGE_URI}",
       "essential": true,
+      "mountPoints": [
+        {
+          "sourceVolume": "app-public",
+          "containerPath": "/app/public",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "app-tmp",
+          "containerPath": "/app/tmp",
+          "readOnly": false
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -38,6 +62,10 @@
         }
       },
       "environment": [
+        {
+          "name": "SECRET_KEY_BASE",
+          "value": "${SECRET_KEY_BASE}"
+        },
         {
           "name": "OPENSEARCH_URL",
           "value": "${OPENSEARCH_URL}"
@@ -55,6 +83,16 @@
           "value": "${DATABASE_PASSWORD}"
         }
       ]
+    }
+  ],
+  "volumes": [
+    {
+      "name": "app-public",
+      "host": {}
+    },
+    {
+      "name": "app-tmp",
+      "host": {}
     }
   ]
 }

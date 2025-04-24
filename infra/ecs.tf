@@ -18,6 +18,8 @@ resource "aws_iam_role" "backend_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
+  depends_on = [aws_iam_role.backend_task_execution]
+
   role       = aws_iam_role.backend_task_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
@@ -37,9 +39,41 @@ resource "aws_iam_role" "backend_task" {
   })
 }
 
+resource "aws_iam_policy" "backend_task" {
+  name = "${var.project_name}-backend-task-policy"
+  description = "Policy for ECS Task Role to access AWS resources"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:*",
+          "dynamodb:*"
+        ],
+        Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel",
+          "ecs:ExecuteCommand"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "backend_task_policy" {
+  depends_on = [aws_iam_role.backend_task]
+
   role       = aws_iam_role.backend_task.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  policy_arn = aws_iam_policy.backend_task.arn
 }
 
 resource "aws_ecs_task_definition" "backend" {

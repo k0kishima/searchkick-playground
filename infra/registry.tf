@@ -24,7 +24,7 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
   thumbprint_list = ["9e99a48a9960b14926bb7f3b4bdf8ce051d08455"]
 }
 
-resource "aws_iam_role" "github_actions_role" {
+resource "aws_iam_role" "github_actions" {
   name = "${var.project_name}-github-actions-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -45,8 +45,9 @@ resource "aws_iam_role" "github_actions_role" {
   })
 }
 
-resource "aws_iam_policy" "github_actions_ecr_policy" {
+resource "aws_iam_policy" "github_actions_ecr" {
   name = "${var.project_name}-ecr-policy"
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -72,8 +73,8 @@ resource "aws_iam_policy" "github_actions_ecr_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "github_actions_ecr_policy_attachment" {
-  depends_on = [aws_iam_policy.github_actions_ecr_policy]
+  depends_on = [aws_iam_policy.github_actions_ecr]
 
-  role       = aws_iam_role.github_actions_role.name
-  policy_arn = aws_iam_policy.github_actions_ecr_policy.arn
+  role       = aws_iam_role.github_actions.name
+  policy_arn = aws_iam_policy.github_actions_ecr.arn
 }

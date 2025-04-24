@@ -44,9 +44,9 @@ resource "aws_lb_target_group" "app" {
   vpc_id      = aws_vpc.this.id
 
   health_check {
-    path                = "/"
-    matcher             = "200-499"
-    interval            = 30
+    path                = "/up"
+    matcher             = "200"
+    interval            = 60
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 3

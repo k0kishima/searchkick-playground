@@ -51,3 +51,5 @@ end
 gem "searchkick", "~> 5.5"
 
 gem "opensearch-ruby", "~> 3.4"
+
+gem "sqlite3", "~> 2.6"
