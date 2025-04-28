@@ -45,7 +45,7 @@ resource "aws_iam_role" "github_actions" {
   })
 }
 
-resource "aws_iam_policy" "github_actions_ecr" {
+resource "aws_iam_policy" "github_actions" {
   name = "${var.project_name}-ecr-policy"
 
   policy = jsonencode({
@@ -67,14 +67,24 @@ resource "aws_iam_policy" "github_actions_ecr" {
           "iam:PassRole"
         ],
         Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "ssm:GetParameter"
+        ],
+        Resource = [
+          "arn:aws:ssm:ap-northeast-1:${data.aws_caller_identity.current.account_id}:parameter/searchkick-playground/database/*",
+          "arn:aws:ssm:ap-northeast-1:${data.aws_caller_identity.current.account_id}:parameter/searchkick-playground/opensearch/*"
+        ]
       }
     ]
   })
 }
 
 resource "aws_iam_role_policy_attachment" "github_actions_ecr_policy_attachment" {
-  depends_on = [aws_iam_policy.github_actions_ecr]
+  depends_on = [aws_iam_policy.github_actions]
 
   role       = aws_iam_role.github_actions.name
-  policy_arn = aws_iam_policy.github_actions_ecr.arn
+  policy_arn = aws_iam_policy.github_actions.arn
 }

@@ -67,6 +67,10 @@
           "value": "${SECRET_KEY_BASE}"
         },
         {
+          "name": "AWS_REGION",
+          "value": "${AWS_REGION}"
+        },
+        {
           "name": "OPENSEARCH_URL",
           "value": "${OPENSEARCH_URL}"
         },

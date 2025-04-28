@@ -53,3 +53,7 @@ gem "searchkick", "~> 5.5"
 gem "opensearch-ruby", "~> 3.4"
 
 gem "sqlite3", "~> 2.6"
+
+gem "faraday_middleware-aws-sigv4", "~> 1.0"
+
+gem "aws-sdk-opensearchservice", "~> 1.66"

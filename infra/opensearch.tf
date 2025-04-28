@@ -28,13 +28,13 @@ resource "aws_opensearch_domain" "this" {
 
   advanced_security_options {
     enabled                        = true
-    internal_user_database_enabled = true
+    internal_user_database_enabled = false
 
     master_user_options {
-      master_user_name     = "admin"
-      master_user_password = var.opensearch_master_user_password
+      master_user_arn = aws_iam_role.backend_task.arn
     }
   }
+
   access_policies = jsonencode({
     Version = "2012-10-17",
     Statement = [

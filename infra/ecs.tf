@@ -40,7 +40,7 @@ resource "aws_iam_role" "backend_task" {
 }
 
 resource "aws_iam_policy" "backend_task" {
-  name = "${var.project_name}-backend-task-policy"
+  name        = "${var.project_name}-backend-task-policy"
   description = "Policy for ECS Task Role to access AWS resources"
 
   policy = jsonencode({

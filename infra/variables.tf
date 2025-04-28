@@ -8,17 +8,17 @@ variable "aws_region" {
   default = "ap-northeast-1"
 }
 
-variable "db_username" {
+variable "database_username" {
   type    = string
   default = "app"
 }
 
-variable "db_password" {
+variable "database_password" {
   type      = string
   sensitive = true
 }
 
-variable "db_name" {
+variable "database_name" {
   type    = string
   default = "searchkick_playground"
 }
@@ -44,12 +44,6 @@ variable "opensearch_ebs_volume_size" {
   type        = number
   description = "The size (in GB) of the OpenSearch EBS volume"
   default     = 10
-}
-
-variable "opensearch_master_user_password" {
-  description = "Password for OpenSearch master user"
-  type        = string
-  sensitive   = true
 }
 
 variable "github_repository" {
