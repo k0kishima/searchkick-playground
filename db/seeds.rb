@@ -1,23 +1,35 @@
 Company.create!(
-  name: "帝国金融",
-  description: "大阪府に本社を置く、貸金業を営む企業。主に中小企業向けの融資を行っている。",
+  name: "カルドリア電機株式会社",
+  description: "カルドリア共和国に本社を置く総合電機メーカー。先端の通信機器とソフトウェア技術を強みに持つ。",
   company_synonyms_attributes: [
-    { name: "バンク・オブ・エンペラー" },
+    { name: "Caldria Electric Company" },
+    { name: "CEC" }
   ]
 )
 
 Company.create!(
-  name: "雑巾自動車",
-  description: "中古車販売を行う企業。特にスポーツカーに強みを持つ。",
+  name: "CECマネジメントサービス株式会社",
+  description: "CECグループの管理業務支援会社。人事、財務、ITサポートなどのバックオフィス業務を担う。",
   company_synonyms_attributes: [
-    { name: "Zokin Motors" },
+    { name: "CECマネジメントパートナー" },
+    { name: "Caldria Management Services" }
   ]
 )
 
 Company.create!(
-  name: "ニシキヘビファイナンス",
-  description: "支店を大量に出しているため勢いがありそうに見える貸金業者。",
+  name: "キャリアフューチャーズ株式会社",
+  description: "若手向けのキャリア支援・教育事業を展開するスタートアップ。",
   company_synonyms_attributes: [
-    { name: "Python Finance" },
+    { name: "キャリフュ" },
+    { name: "Career Futures" }
+  ]
+)
+
+Company.create!(
+  name: "バリューテックソリューションズ株式会社",
+  description: "業務改善ツールやERPの提供を行う中堅ソフトウェアベンダー。",
+  company_synonyms_attributes: [
+    { name: "バリューテック" },
+    { name: "ValueTech" }
   ]
 )
