@@ -48,14 +48,7 @@ jobs:
 
       - name: Retrieve secret values from SSM
         run: |
-          raw_opensearch=$(aws ssm get-parameter --name "/searchkick-playground/opensearch/url" --with-decryption --region ap-northeast-1 | jq -r .Parameter.Value)
-
-          if [[ "$raw_opensearch" == http* ]]; then
-            opensearch_url="$raw_opensearch"
-          else
-            opensearch_url="https://$raw_opensearch"
-          fi
-
+          opensearch_url=$(aws ssm get-parameter --name "/searchkick-playground/opensearch/url" --with-decryption --region ap-northeast-1 | jq -r .Parameter.Value)
           db_hostname=$(aws ssm get-parameter --name "/searchkick-playground/database/hostname" --with-decryption --region ap-northeast-1 | jq -r .Parameter.Value)
           db_username=$(aws ssm get-parameter --name "/searchkick-playground/database/username" --with-decryption --region ap-northeast-1 | jq -r .Parameter.Value)
           db_password=$(aws ssm get-parameter --name "/searchkick-playground/database/password" --with-decryption --region ap-northeast-1 | jq -r .Parameter.Value)

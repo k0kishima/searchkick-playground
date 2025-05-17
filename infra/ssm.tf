@@ -19,5 +19,5 @@ resource "aws_ssm_parameter" "database_password" {
 resource "aws_ssm_parameter" "opensearch_url" {
   name  = "/searchkick-playground/opensearch/url"
   type  = "String"
-  value = aws_opensearch_domain.this.endpoint
+  value = "https://${aws_opensearch_domain.this.endpoint}"
 }
